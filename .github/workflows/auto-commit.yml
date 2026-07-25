@@ -1,0 +1,74 @@
+name: Auto commit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 2,7,11,14 * * *" # Jalan jam 09:23, 14:23, 18:23, dan 21:23 WIB
+jobs:
+  auto_commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Modify Last Update
+        run: |
+          date -u '+%Y-%m-%dT%H:%M:%SZ' > last_update
+
+      - name: Commit Changes
+        run: |
+          git config --local user.email "nauliajati@tangerangkota.go.id"
+          git config --local user.name "CSIRT BOT Commit"
+          git add -A
+
+          # Cek apakah ada perubahan file
+          if git diff --staged --quiet; then
+            echo "Tidak ada perubahan untuk di-commit."
+            exit 0
+          fi
+
+          arr=(
+            "chore(bot): 🌅 menyulam arunika pada riwayat"
+            "chore(bot): 🌌 menitip pendar di cakrawala sunyi"
+            "chore(bot): 🪶 menatah aksara pada linimasa"
+            "chore(bot): 🌿 merawat rahayu dalam repositori"
+            "chore(bot): 🕊️ mengirim swastamita lewat jejak kecil"
+            "chore(bot): 🌊 menjaga nirmala di arus perubahan"
+            "chore(bot): 🪷 menumbuhkan asmaraloka pada halaman waktu"
+            "chore(bot): 🔆 menyibak bianglala selepas rinai"
+            "chore(bot): 🍃 menabur ancala pada langkah senyap"
+            "chore(bot): 🧭 menandai cakra manggilingan hari ini"
+            "chore(bot): 🍂 memeluk amerta dalam dinginnya malam"
+            "chore(bot): 🔮 merajut candramawa di sela algoritma"
+            "chore(bot): 🕯️ menyalakan renjana dalam bait-bait kode"
+            "chore(bot): 🪐 melintasi adiwarna di semesta digital"
+            "chore(bot): 🌙 membiarkan baswara berpendar tenang"
+            "chore(bot): 🌸 merangkai tirta nirmala di tapak waktu"
+            "chore(bot): ⚓ menambat junjungan pada dermaga sunyi"
+            "chore(bot): 🌾 menyemaikan harapan di padang sandi"
+            "chore(bot): 📜 mencatat kisah dalam lembaran ghaib"
+            "chore(bot): ✨ mengabadikan jejak di keabadian bit"
+            "chore(bot): ⚙️ mengalirkan pulsasi di dalam core"
+            "chore(bot): 🌌 menenun jejak digital di cangkang waktu"
+            "chore(bot): 🔮 merajut pendar algoritma di sunyinya malam"
+            "chore(bot): 🍃 menjaga ritme dalam siklus tak bertepi"
+            "chore(bot): 📡 menyiarkan denyut rahayu ke semesta bit"
+            "chore(bot): 🛡️ mengunci harmoni dalam repositori"
+            "chore(bot): ⚡ menyalakan pendar energi pada linimasa"
+            "chore(bot): 🧭 menavigasi bahtera data di samudera siber"
+            "chore(bot): 🪶 mencatat memori dalam enkripsi waktu"
+            "chore(bot): 🌟 menyulam cahaya di balik barisan kode"
+          )
+
+          NOW=$(TZ='Asia/Jakarta' date +'%Y-%m-%d %H:%M WIB')
+
+          rand=$((RANDOM % ${#arr[@]}))
+
+          git commit -m "${arr[$rand]} [$NOW]"
+
+      - name: Push changes
+        run: git push
